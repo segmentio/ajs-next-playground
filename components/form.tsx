@@ -1,46 +1,48 @@
-import { useState } from "react";
 import { analytics } from "@/lib/segment";
+import { useState } from "react";
 
 export default function Form() {
-  const [message, setMessage] = useState("");
+	const [email, setEmail] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    analytics.track("Form Submitted", {
-      message,
-    });
-    setMessage("");
-  };
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		// generate unique ID for user
+		const userId = `DB-USER-ID-${Math.random().toString(36).substring(7)}`;
+		analytics.identify(userId, { email });
+		analytics.track("User Sign Up", {
+			email,
+		});
 
-  return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <span>Message:</span>
-          <textarea
-            onChange={(e) => setMessage(e.target.value)}
-            value={message}
-          />
-        </label>
-        <button type="submit">submit</button>
-      </form>
+		setEmail("");
+		alert("User Identified!");
+	};
 
-      <style jsx>{`
-        label span {
-          display: block;
-          margin-bottom: 12px;
-        }
+	return (
+		<>
+			<form onSubmit={handleSubmit}>
+				<label>
+					<span>Email:</span>
+					<input type="text" onChange={(e) => setEmail(e.target.value)} value={email} />
+				</label>
+				<button type="submit">submit</button>
+			</form>
 
-        textarea {
-          min-width: 300px;
-          min-height: 120px;
-        }
+			<style jsx>{`
+				label span {
+					display: block;
+					margin-bottom: 12px;
+				}
 
-        button {
-          margin-top: 12px;
-          display: block;
-        }
-      `}</style>
-    </>
-  );
+				textarea {
+					min-width: 300px;
+					min-height: 120px;
+				}
+
+				button {
+					margin-top: 12px;
+					display: block;
+				}
+			`}</style>
+		</>
+	);
 }
