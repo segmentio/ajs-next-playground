@@ -10,7 +10,7 @@ export default function Events() {
 				<title>Events</title>
 			</Head>
 			<div>
-				<h1>View your analytics.js events in Segment's debugger</h1>
+				<h1>View your Analytics.js events in Segment's debugger</h1>
 				<button onClick={goToDebugger}>Segment Debugger</button>
 			</div>
 			<style jsx>{`
