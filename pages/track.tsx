@@ -11,6 +11,8 @@ export default function Track() {
 			<Head>
 				<title>Track Events</title>
 			</Head>
+			<h1>Track</h1>
+			<i>Track user events</i>
 			<div>
 				<button onClick={() => trackEvent("Track Here")}>Track Here</button>
 				<button onClick={() => trackEvent("Track There")}>Track There</button>

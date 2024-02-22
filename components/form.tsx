@@ -1,13 +1,15 @@
 import { analytics } from "@/lib/segment";
-import { useState } from "react";
+import { User } from "@segment/analytics-next";
+import { useEffect, useState } from "react";
 
 export default function Form() {
 	const [email, setEmail] = useState("");
+	const [user, setUser] = useState<User | null>(null);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		// generate unique ID for user
-		const userId = `DB-USER-ID-${Math.random().toString(36).substring(7)}`;
+		const userId = `UNIQUE-DB-ID-for-${email}-${Math.random().toString(36).substring(7)}`;
 		analytics.identify(userId, { email });
 		analytics.track("User Sign Up", {
 			email,
@@ -17,30 +19,33 @@ export default function Form() {
 		alert("User Identified!");
 	};
 
+	useEffect(() => {
+		const getUser = async () => {
+			const user = await analytics.user();
+			setUser(user);
+		};
+		getUser();
+	}, []);
+
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
 				<label>
-					<span>Email:</span>
+					<span>Email: &nbsp;</span>
 					<input type="text" onChange={(e) => setEmail(e.target.value)} value={email} />
 				</label>
-				<button type="submit">submit</button>
+				<button type="submit">Identify</button>
+				<h4>Segment User ID: {user?.id() || user?.anonymousId()}</h4>
 			</form>
 
 			<style jsx>{`
-				label span {
-					display: block;
-					margin-bottom: 12px;
-				}
-
 				textarea {
 					min-width: 300px;
 					min-height: 120px;
 				}
 
 				button {
-					margin-top: 12px;
-					display: block;
+					margin-left: 12px;
 				}
 			`}</style>
 		</>
